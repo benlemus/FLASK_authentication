@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+<!-- title -->
+{% block title %}
+<title>Register!</title>
+{% endblock %}
+
+<!-- content -->
+{% block content %}
+
+<div class="container-fluid">
+  <h1>New User Registration</h1>
+</div>
+
+<div class="container-fluid">
+  <div class="container" style="max-width: 50%">
+    <!-- register form -->
+    <form action="" , method="POST">
+      {{ register_form.hidden_tag() }} {% for field in register_form if
+      field.widget.input_type != 'hidden' %}
+      <div class="mt-2">
+        {{ field.label (class_='form-label') }} {{ field
+        (class_='form-control')}} {% for error in field.errors %} {{ error }} {%
+        endfor %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary mt-3">Submit</button>
+    </form>
+  </div>
+</div>
+{% endblock%}
