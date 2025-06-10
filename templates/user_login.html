@@ -8,17 +8,10 @@
 </div>
 
 <div class="container-fluid">
+  <!-- form -->
   <div class="container" style="max-width: 50%">
-    <!-- register form -->
     <form action="" , method="POST">
-      {{ login_form.hidden_tag() }} {% for field in login_form if
-      field.widget.input_type != 'hidden' %}
-      <div class="mt-2">
-        {{ field.label (class_='form-label') }} {{ field
-        (class_='form-control')}} {% for error in field.errors %} {{ error }} {%
-        endfor %}
-      </div>
-      {% endfor %}
+      {% include 'bootstrap_form.j2' %}
       <button type="submit" class="btn btn-success mt-3">Login</button>
     </form>
   </div>

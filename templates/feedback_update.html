@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+<!-- content -->
+{% block content %}
+<div class="container-fluid">
+  <!-- form -->
+  <div class="container" style="max-width: 50%">
+    <form action="" , method="POST">
+      {% include 'bootstrap_form.j2' %}
+      <button type="submit" class="btn btn-primary mt-3">Update</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -3,10 +3,28 @@
 <!-- content -->
 {% block content %}
 <div class="container">
-  <ul style="list-style-type: none">
-    <li><h3>{{user.username}}</h3></li>
-    <li>{{user.email}}</li>
-    <li>{{user.first_name}} {{user.last_name}}</li>
-  </ul>
+  <h1>{{user.username}}</h1>
+  <span>{{user.email}}</span>
+  <p>{{user.first_name}} {{user.last_name}}</p>
+
+  <h3 class="border-top border-black">Your FeedBack</h3>
+  {% if feedback %} {% for f in feedback %}
+
+  <span><b>{{f.title}}</b></span>
+  <span
+    ><a href="/feedback/{{f.id}}/update" class="btn btn-primary"
+      >Update</a
+    ></span
+  >
+  <span
+    ><a href="/feedback/{{f.id}}/delete" class="btn btn-danger">Delete</a></span
+  >
+
+  <p>{{f.username}}</p>
+  <p>{{f.content}}</p>
+
+  {% endfor %} {% else %}
+  <h3>no feedback yet.</h3>
+  {% endif %}
 </div>
 {% endblock %}
