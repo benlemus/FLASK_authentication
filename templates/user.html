@@ -7,18 +7,19 @@
   <span>{{user.email}}</span>
   <p>{{user.first_name}} {{user.last_name}}</p>
 
-  <h3 class="border-top border-black">Your FeedBack</h3>
+  <h3 class="border-top border-black"><b>Your FeedBack</b></h3>
+  <a
+    href="/users/{{user.username}}/feedback/add"
+    class="btn btn-primary btn-sm mb-3"
+    >Add Feedback</a
+  >
   {% if feedback %} {% for f in feedback %}
 
-  <span><b>{{f.title}}</b></span>
-  <span
-    ><a href="/feedback/{{f.id}}/update" class="btn btn-primary"
-      >Update</a
-    ></span
-  >
-  <span
-    ><a href="/feedback/{{f.id}}/delete" class="btn btn-danger">Delete</a></span
-  >
+  <div class="d-flex align-items-center gap-2">
+    <h3 class="mb-0">{{f.title}}</h3>
+    <a href="/feedback/{{f.id}}/update" class="btn btn-primary btn-sm">Edit</a>
+    <a href="/feedback/{{f.id}}/delete" class="btn btn-danger btn-sm">Delete</a>
+  </div>
 
   <p>{{f.username}}</p>
   <p>{{f.content}}</p>
