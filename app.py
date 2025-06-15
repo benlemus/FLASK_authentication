@@ -52,11 +52,9 @@ def user_login():
         password = login_form.password.data 
 
         user = User.authenticate(username, password)
-        print(user)
 
         if user:
-            session['username'] = user.username
-            print(session['username'])
+            session['username'] = user.username    
             return redirect(f'/users/{username}')
 
     return render_template('user_login.html', form=login_form)
@@ -64,7 +62,7 @@ def user_login():
 @app.route('/users/<username>')
 def user(username):
     if "username" not in session:
-        flash("You are not logged in!")
+        flash("You are not logged in!", category="danger")
         return redirect("/")
 
     cur_u = User.query.get_or_404(username)
