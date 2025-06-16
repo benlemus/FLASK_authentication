@@ -12,10 +12,14 @@
   <span>{{user.email}}</span>
   <p>{{user.first_name}} {{user.last_name}}</p>
 
+  <a href="/users/{{user.username}}/delete" class="btn btn-outline-danger mb-3"
+    >Delete User</a
+  >
+
   <h3 class="border-top border-black"><b>Your FeedBack</b></h3>
   <a
     href="/users/{{user.username}}/feedback/add"
-    class="btn btn-primary btn-sm mb-3"
+    class="btn btn-outline-primary mb-3"
     >Add Feedback</a
   >
   {% if feedback %} {% for f in feedback %}

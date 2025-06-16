@@ -23,41 +23,52 @@ def home_page():
 
 @app.route('/register', methods=['GET', 'POST'])
 def user_register():
-    register_form = RegisterForm()
 
-    if register_form.validate_on_submit():
-        username = register_form.username.data
-        password = register_form.password.data
-        email = register_form.email.data
-        first_name = register_form.first_name.data
-        last_name = register_form.last_name.data
+    if 'username' not in session:
+        register_form = RegisterForm()
 
-        new_user = User.register(username, password, email, first_name, last_name)
+        if register_form.validate_on_submit():
+            username = register_form.form_username.data
+            password = register_form.form_password.data
+            email = register_form.email.data
+            first_name = register_form.first_name.data
+            last_name = register_form.last_name.data
 
-        db.session.add(new_user)
-        db.session.commit()
+            new_user = User.register(username, password, email, first_name, last_name)
 
-        session['username'] = new_user.username
+            db.session.add(new_user)
+            db.session.commit()
 
-        return redirect(f'/users/{username}')
+            session['username'] = new_user.username
 
-    return render_template('user_register.html', form=register_form)
+            return redirect(f'/users/{username}')
+
+        return render_template('user_register.html', form=register_form)
+    
+    flash('You are logged in.' , category="info")
+    
+    return redirect(f'/users/{session["username"]}')
 
 @app.route('/login', methods=['GET', 'POST'])
 def user_login():
-    login_form = LoginForm()
+    if 'username' not in session:
+        login_form = LoginForm()
 
-    if login_form.validate_on_submit():
-        username = login_form.username.data
-        password = login_form.password.data 
+        if login_form.validate_on_submit():
+            username = login_form.form_username.data
+            password = login_form.form_password.data 
 
-        user = User.authenticate(username, password)
+            user = User.authenticate(username, password)
 
-        if user:
-            session['username'] = user.username    
-            return redirect(f'/users/{username}')
+            if user:
+                session['username'] = user.username    
+                return redirect(f'/users/{username}')
 
-    return render_template('user_login.html', form=login_form)
+        return render_template('user_login.html', form=login_form)
+    
+    flash('You are logged in.' , category="warning")
+    
+    return redirect(f'/users/{session["username"]}')
 
 @app.route('/users/<username>')
 def user(username):
@@ -77,11 +88,30 @@ def user_logout():
 
     return redirect('/')
 
+@app.route('/users/<username>/delete')
+def delete_user(username):
+    if "username" not in session:
+        flash("You are not logged in!", category="danger")
+        return redirect("/")
+    
+    user = User.query.get_or_404(session['username'])
+
+    if user and user.username == username:
+        session.pop('username')
+        db.session.delete(user)
+        db.session.commit()
+
+        return redirect('/')
+
 
 ''' FEEDBACK '''
 
 @app.route('/feedback/<int:feedback_id>/update', methods=['GET', 'POST'])
 def feedback_update(feedback_id):
+    if "username" not in session:
+        flash("You dont have access to that!", category="danger")
+        return redirect('/')
+
     f = Feedback.query.get_or_404(feedback_id)
     update_f_form = FeedbackForm(obj=f)
 
@@ -97,6 +127,10 @@ def feedback_update(feedback_id):
 
 @app.route('/feedback/<int:feedback_id>/delete')
 def feedback_delete(feedback_id):
+    if "username" not in session:
+        flash("You dont have access to that!", category="danger")
+        return redirect('/')
+    
     f = Feedback.query.get_or_404(feedback_id)
     cur_u = User.query.get_or_404(f.user.username)
     db.session.delete(f)
@@ -105,6 +139,14 @@ def feedback_delete(feedback_id):
 
 @app.route('/users/<username>/feedback/add', methods=['GET', 'POST'])
 def feedback_add(username):
+    if "username" not in session:
+        flash("You must be logged in!", category="danger")
+        return redirect('/')
+    
+    if username != session['username']:
+        flash("You cannot add feedback!", category="danger")
+        return redirect(f'/users/{username}')
+    
     feedback_add_form = FeedbackForm()
     cur_u = User.query.get_or_404(session['username'])
 
