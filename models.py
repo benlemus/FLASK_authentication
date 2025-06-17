@@ -18,15 +18,16 @@ class User(db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False)
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
+    is_admin = db.Column(db.Boolean, nullable=False, default=False)
 
-    feedback = db.relationship('Feedback', backref='user', lazy='dynamic')
+    feedback = db.relationship('Feedback', backref='user', lazy='dynamic', cascade="all, delete-orphan")
 
     @classmethod
-    def register(cls, username, password, email, first_name, last_name):
+    def register(cls, username, password, email, first_name, last_name, is_admin):
         hashed = bcrypt.generate_password_hash(password)
         hashed_utf8 = hashed.decode('utf8')
 
-        return cls(username=username, password=hashed_utf8, email=email, first_name=first_name, last_name=last_name)
+        return cls(username=username, password=hashed_utf8, email=email, first_name=first_name, last_name=last_name,is_admin=is_admin)
     
     @classmethod
     def authenticate(cls, username, password):

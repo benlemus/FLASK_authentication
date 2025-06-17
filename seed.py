@@ -10,7 +10,8 @@ with app.app_context():
         password="BarkBark0",
         email="iliketreats@bark.com",
         first_name="Milo",
-        last_name="The Puppy"
+        last_name="The Puppy",
+        is_admin=False
     )
 
     u2 = User.register(
@@ -18,7 +19,8 @@ with app.app_context():
         password="GiveMeF00d",
         email="marvin@catnip.corp",
         first_name="Marvin",
-        last_name="The Cat"
+        last_name="The Cat",
+        is_admin=True
     )
 
     u3 = User.register(
@@ -26,7 +28,8 @@ with app.app_context():
         password="WhatAreYouLookingAt300",
         email="george@meow.com",
         first_name="Mojo",
-        last_name="The Cat"
+        last_name="The Cat",
+        is_admin=False
     )
 
     db.session.add_all([u1,u2,u3])
