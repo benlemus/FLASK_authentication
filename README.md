@@ -1,0 +1,1 @@
+This is a web app that accepts new and existing users. Once registered or logged in, you can post feedback on your account, edit feedback or delete feedback or the user. There are also admin roles that lets any admin add, delete, update any users feedback or delete their account. If you do not have an admin role you can only add, update, delete on your own page.
