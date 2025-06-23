@@ -34,11 +34,11 @@ def user_register():
             first_name = register_form.first_name.data
             last_name = register_form.last_name.data
 
-            if register_form.admin_code.data and register_form.admin_code.data == 123:
+            if register_form.admin_code.data and register_form.admin_code.data == '123':
                 is_admin = True
             else:
                 is_admin = False
-
+            
             new_user = User.register(username, password, email, first_name, last_name, is_admin)
 
             db.session.add(new_user)
@@ -75,9 +75,7 @@ def user_login():
             flash(f'Error Loggin in, error: {e}', category='danger')
             return redirect('/')
 
-    
     flash('You are logged in.' , category="warning")
-    
     return redirect(f'/users/{session["username"]}')
 
 @app.route('/users/<username>')
@@ -176,32 +174,32 @@ def feedback_delete(feedback_id):
 
 @app.route('/users/<username>/feedback/add', methods=['GET', 'POST'])
 def feedback_add(username):
+    if "username" not in session:
+        flash("You must be logged in!", category="danger")
+        return redirect('/')
+
     try:
         feedback_add_form = FeedbackForm()
         cur_u = User.query.get_or_404(session['username'])
     except Exception as e:
         flash(f'Error getting data, error: {e}', category='danger')
         return redirect(f'/users/{username}')
-
-    if "username" not in session:
-        flash("You must be logged in!", category="danger")
-        return redirect('/')
     
     if username != session['username'] and cur_u.is_admin == False:
         flash("You cannot add feedback!", category="danger")
         return redirect(f'/users/{username}')
 
     if username == cur_u.username or cur_u.is_admin == True:
-            if feedback_add_form.validate_on_submit():
-                title = feedback_add_form.title.data.capitalize()
-                content = feedback_add_form.content.data
+        if feedback_add_form.validate_on_submit():
+            title = feedback_add_form.title.data.capitalize()
+            content = feedback_add_form.content.data
 
-                new_feedback = Feedback(title=title, content=content, username=username)
-                db.session.add(new_feedback)
-                db.session.commit()
+            new_feedback = Feedback(title=title, content=content, username=username)
+            db.session.add(new_feedback)
+            db.session.commit()
 
-                return redirect(f'/users/{username}')
-            return render_template('feedback_add.html', form=feedback_add_form)
+            return redirect(f'/users/{username}')
+        return render_template('feedback_add.html', form=feedback_add_form)
     return redirect(f'/users/{username}')
 
 ''' 404 PAGE '''
